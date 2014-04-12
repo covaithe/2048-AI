@@ -43,10 +43,47 @@ AI.prototype.canGoUp = function() {
   return false;
 }
 
+AI.prototype.canGoLeft = function() {
+  // needs either a space to the left of a non-space,
+  for(var y=0; y<4; y++) {
+    var spaceFound = false;
+    for(var x=0; x<4; x++) {
+      var tile = this.grid.cells[x][y];
+      if (tile) {
+        if(spaceFound) {
+          return true;
+        }
+      } else {
+        spaceFound = true;
+      }
+    }
+  }
+  
+  // or a pair of the same number in the same row with nothing between
+  for(var y=0; y<4; y++) {
+    var currentNum = null;
+    for(var x=0; x<4; x++) {
+      var tile = this.grid.cells[x][y];
+      if (tile) {
+        if (tile.value == currentNum) {
+          return true;
+        } else {
+          currentNum = tile.value;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 // performs a search and returns the best move
 AI.prototype.getBest = function() {
   if (this.canGoUp()) {
     return { move: '0'};
+  } 
+  if (this.canGoLeft()) {
+    return { move: '3'};
   } 
   return { move: '1'};
 }
