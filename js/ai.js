@@ -79,6 +79,9 @@ AI.prototype.canGoLeft = function() {
 
 // performs a search and returns the best move
 AI.prototype.getBest = function() {
+  var bot = new Bot(this.grid);
+  return { move: bot.getBestMove() };
+
   if (this.canGoUp()) {
     return { move: '0'};
   } 
