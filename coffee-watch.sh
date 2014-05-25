@@ -1,2 +1,2 @@
 #!/bin/sh
-coffee -o js -cw coffee
+coffee --bare -o js -cw coffee
