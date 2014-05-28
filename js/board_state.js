@@ -2,10 +2,60 @@
 var BoardState, BoardStateFactory;
 
 BoardState = (function() {
-  function BoardState() {}
+  function BoardState() {
+    var col, row;
+    this.rows = (function() {
+      var _i, _results;
+      _results = [];
+      for (row = _i = 0; _i <= 3; row = ++_i) {
+        _results.push((function() {
+          var _j, _results1;
+          _results1 = [];
+          for (col = _j = 0; _j <= 3; col = ++_j) {
+            _results1.push(null);
+          }
+          return _results1;
+        })());
+      }
+      return _results;
+    })();
+    this.cols = this.rows.map(function(r) {
+      return r.slice(0);
+    });
+  }
 
   BoardState.prototype.cell = function(col, row) {
     return this.rows[row - 1][col - 1];
+  };
+
+  BoardState.prototype.move = function(direction) {
+    var rows;
+    rows = this.rows.map(this.combineRight);
+    return new BoardStateFactory().fromRows(rows);
+  };
+
+  BoardState.prototype.combineRight = function(row, i) {
+    var _ref;
+    if (i == null) {
+      i = 3;
+    }
+    if (i === 0) {
+      return row;
+    }
+    if (row.slice(0, +i + 1 || 9e9).every(function(x) {
+      return x === null;
+    })) {
+      return row;
+    }
+    if (row[i] === null) {
+      [].splice.apply(row, [0, i - 0 + 1].concat(_ref = row.slice(0, +(i - 1) + 1 || 9e9))), _ref;
+      row.unshift(null);
+      return this.combineRight(row, i);
+    } else if (row[i] === row[i - 1]) {
+      row[i] *= 2;
+      row[i - 1] = null;
+    }
+    return this.combineRight(row, i - 1);
   };
 
   return BoardState;
