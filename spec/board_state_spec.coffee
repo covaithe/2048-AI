@@ -4,6 +4,12 @@ describe 'BoardState', ->
 
   factory = new stuff.BoardStateFactory()
 
+  describe 'combine', ->
+    bs = new stuff.BoardState()
+
+    it 'shoudl count down right', ->
+      bs.combine( [2,null,null,null] )
+
   describe 'combineRight', ->
     bs = new stuff.BoardState()
 

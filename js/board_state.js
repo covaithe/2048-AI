@@ -34,6 +34,41 @@ BoardState = (function() {
     return new BoardStateFactory().fromRows(rows);
   };
 
+  BoardState.prototype.combine = function(row) {
+    var i, j, _i, _j, _k, _ref, _ref1;
+    for (i = _i = 3; _i >= 1; i = --_i) {
+      if (row[i] === null) {
+        for (j = _j = _ref = i - 1; _ref <= 0 ? _j <= 0 : _j >= 0; j = _ref <= 0 ? ++_j : --_j) {
+          if (row[j] !== null) {
+            this._moveRight(row, i, i - j);
+          }
+        }
+      }
+      if (row[i] === null) {
+        return row;
+      }
+      for (j = _k = _ref1 = i - 1; _ref1 <= 0 ? _k <= 0 : _k >= 0; j = _ref1 <= 0 ? ++_k : --_k) {
+        if (row[j] !== null) {
+          if (row[j] === row[i]) {
+            row[i] *= 2;
+            row[j] = null;
+          }
+        }
+      }
+    }
+    return row;
+  };
+
+  BoardState.prototype._moveRight = function(row, index, steps) {
+    var k, _i, _ref, _results;
+    [].splice.apply(row, [0, index - 0 + 1].concat(_ref = row.slice(0, +(index - steps) + 1 || 9e9))), _ref;
+    _results = [];
+    for (k = _i = 0; 0 <= steps ? _i <= steps : _i >= steps; k = 0 <= steps ? ++_i : --_i) {
+      _results.push(row.unshift(null));
+    }
+    return _results;
+  };
+
   BoardState.prototype.combineRight = function(row, i) {
     var _ref;
     if (i == null) {

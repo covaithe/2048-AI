@@ -13,6 +13,37 @@ class BoardState
     rows = @rows.map this.combineRight
     new BoardStateFactory().fromRows(rows)
 
+  combine: (row) ->
+    for i in [3..1]
+      # first try to move something non-null into this column
+      if row[i] == null
+        for j in [i-1..0]
+          if row[j] != null
+            this._moveRight(row, i, i-j)
+
+      # if this column is still null, then there were no non-null
+      # columns to the left; we are done
+      return row if row[i] == null
+
+      # then try to combine similar things into this column
+      # Find the next leftward non-null thing
+      for j in [i-1..0]
+        if row[j] != null
+          # if it is different, nothing to do.  
+          # if it is the same, we combine.
+          if row[j] == row[i]
+            row[i] *= 2
+            row[j] = null  #moving stuff rightward into j will happen in a later loop pass
+    row
+
+  _moveRight: (row, index, steps) ->
+    row[0..index] = row[0..index-steps]
+    for k in [0..steps]
+      row.unshift null
+    
+
+
+
   combineRight: (row, i=3) ->
     return row if i == 0
     return row if row[0..i].every (x) -> x == null
