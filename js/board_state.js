@@ -2,6 +2,8 @@
 var BoardState, BoardStateFactory;
 
 BoardState = (function() {
+  var moveRight;
+
   function BoardState() {
     var col, row;
     this.rows = (function() {
@@ -29,9 +31,38 @@ BoardState = (function() {
   };
 
   BoardState.prototype.move = function(direction) {
-    var rows;
-    rows = this.rows.map(this.combineRight);
-    return new BoardStateFactory().fromRows(rows);
+    var cols, rows, self;
+    self = this;
+    if (direction === 'right') {
+      rows = this.rows.map(this.combine);
+      return new BoardStateFactory().fromRows(rows);
+    }
+    if (direction === 'left') {
+      rows = this.rows.map(function(row) {
+        return self.combine(row.reverse()).reverse();
+      });
+      return new BoardStateFactory().fromRows(rows);
+    }
+    if (direction === 'down') {
+      cols = this.cols.map(this.combine);
+      return new BoardStateFactory().fromCols(cols);
+    }
+    if (direction === 'up') {
+      cols = this.cols.map(function(col) {
+        return self.combine(col.reverse()).reverse();
+      });
+      return new BoardStateFactory().fromCols(cols);
+    }
+  };
+
+  moveRight = function(row, index, steps) {
+    var k, _i, _ref, _ref1, _results;
+    [].splice.apply(row, [0, index - 0 + 1].concat(_ref = row.slice(0, +(index - steps) + 1 || 9e9))), _ref;
+    _results = [];
+    for (k = _i = 0, _ref1 = steps - 1; 0 <= _ref1 ? _i <= _ref1 : _i >= _ref1; k = 0 <= _ref1 ? ++_i : --_i) {
+      _results.push(row.unshift(null));
+    }
+    return _results;
   };
 
   BoardState.prototype.combine = function(row) {
@@ -40,7 +71,8 @@ BoardState = (function() {
       if (row[i] === null) {
         for (j = _j = _ref = i - 1; _ref <= 0 ? _j <= 0 : _j >= 0; j = _ref <= 0 ? ++_j : --_j) {
           if (row[j] !== null) {
-            this._moveRight(row, i, i - j);
+            moveRight(row, i, i - j);
+            break;
           }
         }
       }
@@ -53,44 +85,11 @@ BoardState = (function() {
             row[i] *= 2;
             row[j] = null;
           }
+          break;
         }
       }
     }
     return row;
-  };
-
-  BoardState.prototype._moveRight = function(row, index, steps) {
-    var k, _i, _ref, _results;
-    [].splice.apply(row, [0, index - 0 + 1].concat(_ref = row.slice(0, +(index - steps) + 1 || 9e9))), _ref;
-    _results = [];
-    for (k = _i = 0; 0 <= steps ? _i <= steps : _i >= steps; k = 0 <= steps ? ++_i : --_i) {
-      _results.push(row.unshift(null));
-    }
-    return _results;
-  };
-
-  BoardState.prototype.combineRight = function(row, i) {
-    var _ref;
-    if (i == null) {
-      i = 3;
-    }
-    if (i === 0) {
-      return row;
-    }
-    if (row.slice(0, +i + 1 || 9e9).every(function(x) {
-      return x === null;
-    })) {
-      return row;
-    }
-    if (row[i] === null) {
-      [].splice.apply(row, [0, i - 0 + 1].concat(_ref = row.slice(0, +(i - 1) + 1 || 9e9))), _ref;
-      row.unshift(null);
-      return this.combineRight(row, i);
-    } else if (row[i] === row[i - 1]) {
-      row[i] *= 2;
-      row[i - 1] = null;
-    }
-    return this.combineRight(row, i - 1);
   };
 
   return BoardState;

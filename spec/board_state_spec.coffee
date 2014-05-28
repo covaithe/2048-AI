@@ -7,64 +7,39 @@ describe 'BoardState', ->
   describe 'combine', ->
     bs = new stuff.BoardState()
 
-    it 'shoudl count down right', ->
-      bs.combine( [2,null,null,null] )
-
-  describe 'combineRight', ->
-    bs = new stuff.BoardState()
-
-    it 'should ignore null rows', ->
-      expect(bs.combineRight([null, null, null, null])).toEqual([null, null, null, null])
-
-    it 'should do nothing when index is 0', ->
-      expect(bs.combineRight([4], 0)).toEqual([4])
-
-    it 'should move right when i is 1 if possible', ->
-      expect(bs.combineRight([2, null], 1)).toEqual([null, 2])
-
-    it 'should not move right when i is 1 if not possible', ->
-      expect(bs.combineRight([2, 8], 1)).toEqual([2, 8])
-
-    it 'should combine right if possible when i is 1', ->
-      expect(bs.combineRight([2, 2], 1)).toEqual([null, 4])
-
-    it 'should not move when i is 2 if not possible', ->
-      expect(bs.combineRight([2, 4, 8], 2)).toEqual([2,4,8])
-
-    it 'should move when i is 2 if possible', ->
-      expect(bs.combineRight([2, 4, null], 2)).toEqual([null, 2,4])
-
-    it 'should recurse movement when i is 2', ->
-      expect(bs.combineRight([2, null, null], 2)).toEqual([null, null, 2])
-
-    it 'should combine across gaps', ->
-      expect(bs.combineRight([2, null, 2], 2)).toEqual([null, null, 4])
-
-
-    xit 'combines rightmost first', ->
-      expect(bs.combineRight([2, 4, 4, 4])).toEqual([null, 2,4,8])
-
-
     examples = [
         before: [ null, null, null, null ]
         after:  [ null, null, null, null ]
       ,
-        #  before: [ null, null, 4,    null ]
-        #after:  [ null, null, null, 4 ]
-      #  before: [ null, null, 4,    4 ]
-      #  after:  [ null, null, null, 8 ]
-      #,
-      #  before: [ null, 4,    null, 4 ]
-      #  after:  [ null, null, null, 8 ]
-      #,
-      #  before: [ null, 4,    2,    4 ]
-      #  after:  [ null, 4,    2,    4 ]
-      #,
-      #  before: [ 4,    null, null, 4 ]
-      #  after:  [ null, null, null, 8 ]
-      #,
-      #  before: [ 4,    2,    null, 4 ]
-      #  after:  [ null, 4,    2,    4 ]
+        before: [ null, null, 4,    null ]
+        after:  [ null, null, null, 4 ]
+      ,
+        before: [ null, null, 4,    4 ]
+        after:  [ null, null, null, 8 ]
+      ,
+        before: [ null, 4,    null, 4 ]
+        after:  [ null, null, null, 8 ]
+      ,
+        before: [ null, 4,    2,    4 ]
+        after:  [ null, 4,    2,    4 ]
+      ,
+        before: [ 4,    null, null, 4 ]
+        after:  [ null, null, null, 8 ]
+      ,
+        before: [ 4,    null, 4,    null ]
+        after:  [ null, null, null, 8 ]
+      ,
+        before: [ 4,    2,    null, 4 ]
+        after:  [ null, 4,    2,    4 ]
+      ,
+        before: [ 4,    2,    2,    4 ]
+        after:  [ null, 4,    4,    4 ]
+      ,
+        before: [ 4,    4,    1024, 1024 ]
+        after:  [ null, null,    8, 2048 ]
+      ,
+        before: [ 4,    2,    2,    2 ]
+        after:  [ null, 4,    2,    4 ]
     ]
 
     stateWithFirstRow = (row) ->
@@ -80,5 +55,27 @@ describe 'BoardState', ->
 
     testIt x for x in examples
 
+  describe 'directions', ->
+    bs = factory.fromRows [
+      [ null, null, null, null]
+      [ null, null, null, null]
+      [ null, 4   , null, null]
+      [ null, null, null, null]
+    ]
 
+    it 'should move right', ->
+      new_state = bs.move 'right'
+      expect(new_state.rows[2]).toEqual [null, null, null, 4]
+
+    it 'should move left', ->
+      new_state = bs.move 'left'
+      expect(new_state.rows[2]).toEqual [4, null, null, null]
+
+    it 'should move down', ->
+      new_state = bs.move 'down'
+      expect(new_state.cols[1]).toEqual [null, null, null, 4]
+
+    it 'should move up', ->
+      new_state = bs.move 'up'
+      expect(new_state.cols[1]).toEqual [4, null, null, null]
 
