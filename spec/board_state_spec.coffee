@@ -79,3 +79,111 @@ describe 'BoardState', ->
       new_state = bs.move 'up'
       expect(new_state.cols[1]).toEqual [4, null, null, null]
 
+  describe 'legalMoves', ->
+    bs = null
+
+    beforeEach ->
+      bs = new stuff.BoardState()
+
+    describe 'canMoveRight', ->
+      it 'should be false when all nulls', ->
+        bs.rows[0] = [ null, null, null, null ]
+        expect(bs.canMoveRight()).toBe false
+
+      it 'should be false when full with no combines possible', ->
+        bs.rows[0] = [ 2, 4, 2, 4 ]
+        expect(bs.canMoveRight()).toBe false
+
+      it 'should be false when the nulls are packed left', ->
+        bs.rows[0] = [ null, null, 8, 16 ]
+        expect(bs.canMoveRight()).toBe false
+
+      it 'should be true when there is a null to the right of a non-null', ->
+        bs.rows[0] = [ null, 4, null, 16 ]
+        expect(bs.canMoveRight()).toBe true
+
+      it 'should be true when there is a combine possible', ->
+        bs.rows[0] = [ null, 4, 4, 16 ]
+        expect(bs.canMoveRight()).toBe true
+
+      it 'should check all rows for one that can move right', ->
+        bs.rows[3] = [ null, 4, 4, 16 ]
+        expect(bs.canMoveRight()).toBe true
+
+    describe 'canMoveLeft', ->
+      it 'should be false when all nulls', ->
+        bs.rows[0] = [ null, null, null, null ]
+        expect(bs.canMoveLeft()).toBe false
+
+      it 'should be false when full with no combines possible', ->
+        bs.rows[0] = [ 2, 4, 2, 4 ]
+        expect(bs.canMoveLeft()).toBe false
+
+      it 'should be false when the nulls are packed right', ->
+        bs.rows[0] = [ 8, 16, null, null ]
+        expect(bs.canMoveLeft()).toBe false
+
+      it 'should be true when there is a null to the left of a non-null', ->
+        bs.rows[0] = [ null, 4, null, 16 ]
+        expect(bs.canMoveLeft()).toBe true
+
+      it 'should be true when there is a combine possible', ->
+        bs.rows[0] = [ 2, 4, 4, 16 ]
+        expect(bs.canMoveLeft()).toBe true
+
+      it 'should check all rows for one that can move right', ->
+        bs.rows[3] = [ 2, 4, 4, 16 ]
+        expect(bs.canMoveLeft()).toBe true
+
+    describe 'canMoveUp', ->
+      it 'should be false when all nulls', ->
+        bs.cols[0] = [ null, null, null, null ]
+        expect(bs.canMoveUp()).toBe false
+
+      it 'should be false when full with no combines possible', ->
+        bs.cols[0] = [ 2, 4, 2, 4 ]
+        expect(bs.canMoveUp()).toBe false
+
+      it 'should be false when the nulls are packed down', ->
+        bs.cols[0] = [ 8, 16, null, null ]
+        expect(bs.canMoveUp()).toBe false
+
+      it 'should be true when there is a null above a non-null', ->
+        bs.cols[0] = [ 2, 4, null, 16 ]
+        expect(bs.canMoveUp()).toBe true
+
+      it 'should be true when there is a combine possible', ->
+        bs.cols[0] = [ 2, 4, 4, 16 ]
+        expect(bs.canMoveUp()).toBe true
+
+      it 'should check all cols for one that can move', ->
+        bs.cols[3] = [ 2, 4, 4, 16 ]
+        expect(bs.canMoveUp()).toBe true
+
+    describe 'canMoveDown', ->
+      it 'should be false when all nulls', ->
+        bs.cols[0] = [ null, null, null, null ]
+        expect(bs.canMoveDown()).toBe false
+
+      it 'should be false when full with no combines possible', ->
+        bs.cols[0] = [ 2, 4, 2, 4 ]
+        expect(bs.canMoveDown()).toBe false
+
+      it 'should be false when the nulls are packed up', ->
+        bs.cols[0] = [ null, null, 8, 16 ]
+        expect(bs.canMoveDown()).toBe false
+
+      it 'should be true when there is a null below a non-null', ->
+        bs.cols[0] = [ 2, 4, null, 16 ]
+        expect(bs.canMoveDown()).toBe true
+
+      it 'should be true when there is a combine possible', ->
+        bs.cols[0] = [ 2, 4, 4, 16 ]
+        expect(bs.canMoveDown()).toBe true
+
+      it 'should check all cols for one that can move', ->
+        bs.cols[3] = [ 2, 4, 4, 16 ]
+        expect(bs.canMoveDown()).toBe true
+
+  
+

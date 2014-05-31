@@ -92,6 +92,74 @@ BoardState = (function() {
     return row;
   };
 
+  BoardState.prototype.canMoveRight = function() {
+    var i, nextVal, row, _i, _j, _len, _ref;
+    _ref = this.rows;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      row = _ref[_i];
+      for (i = _j = 0; _j <= 2; i = ++_j) {
+        if (row[i]) {
+          nextVal = row[i + 1];
+          if (nextVal === null || nextVal === row[i]) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  };
+
+  BoardState.prototype.canMoveLeft = function() {
+    var i, nextVal, row, _i, _j, _len, _ref;
+    _ref = this.rows;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      row = _ref[_i];
+      for (i = _j = 3; _j >= 1; i = --_j) {
+        if (row[i]) {
+          nextVal = row[i - 1];
+          if (nextVal === null || nextVal === row[i]) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  };
+
+  BoardState.prototype.canMoveUp = function() {
+    var col, i, nextVal, _i, _j, _len, _ref;
+    _ref = this.cols;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      col = _ref[_i];
+      for (i = _j = 3; _j >= 1; i = --_j) {
+        if (col[i]) {
+          nextVal = col[i - 1];
+          if (nextVal === null || nextVal === col[i]) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  };
+
+  BoardState.prototype.canMoveDown = function() {
+    var col, i, nextVal, _i, _j, _len, _ref;
+    _ref = this.cols;
+    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+      col = _ref[_i];
+      for (i = _j = 0; _j <= 2; i = ++_j) {
+        if (col[i]) {
+          nextVal = col[i + 1];
+          if (nextVal === null || nextVal === col[i]) {
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  };
+
   return BoardState;
 
 })();

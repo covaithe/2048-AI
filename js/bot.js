@@ -7,6 +7,19 @@ Bot = (function() {
     console.log(this.grid);
   }
 
+  Bot.prototype.expectimax = function(boardState, depth, ourTurn) {
+    var childScores;
+    if (depth === 0) {
+      return this.evaluate(boardState);
+    }
+    if (ourTurn) {
+      childScores = boardState.legalMoves().map(function(move) {
+        return this.expectimax(boardState.move(move), depth - 1, false);
+      });
+      return Math.max.apply(Math, childScores);
+    }
+  };
+
   Bot.prototype.getBestMove = function() {
     return '1';
   };

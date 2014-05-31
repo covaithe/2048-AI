@@ -62,6 +62,37 @@ class BoardState
           break
     row
 
+  canMoveRight: ->
+    for row in @rows
+      for i in [0..2]
+        if row[i]
+          nextVal = row[i+1]
+          return true if nextVal == null or nextVal == row[i]
+    false
+
+  canMoveLeft: ->
+    for row in @rows
+      for i in [3..1]
+        if row[i]
+          nextVal = row[i-1]
+          return true if nextVal == null or nextVal == row[i]
+    false
+
+  canMoveUp: ->
+    for col in @cols
+      for i in [3..1]
+        if col[i]
+          nextVal = col[i-1]
+          return true if nextVal == null or nextVal == col[i]
+    false
+
+  canMoveDown: ->
+    for col in @cols
+      for i in [0..2]
+        if col[i]
+          nextVal = col[i+1]
+          return true if nextVal == null or nextVal == col[i]
+    false
 
 
 
