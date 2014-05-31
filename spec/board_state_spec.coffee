@@ -210,5 +210,21 @@ describe 'BoardState', ->
       it 'should not include down when canMoveDown is false', ->
         spyOn(bs, 'canMoveDown').andReturn false
         expect(bs.legalMoves()).toNotContain('down')
-  
+
+  describe 'emptySquares', ->
+    it "should be the square coords of the squares that are null", ->
+      bs = factory.fromRows [
+        [ null, 2,    4,  null]
+        [ 2,    4,    8,  16]
+        [ null, 4   , 16, 16]
+        [ 4,    null, 32, 16]
+      ]
+      es = bs.emptySquares()
+      expect(es.length).toBe 4
+      expect(es).toContain(new stuff.Square(0,0))
+      expect(es).toContain(new stuff.Square(0,2))
+      expect(es).toContain(new stuff.Square(1,3))
+      expect(es).toContain(new stuff.Square(3,0))
+
+
 

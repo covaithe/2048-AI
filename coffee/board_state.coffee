@@ -84,6 +84,18 @@ class BoardState
     a.push 'down' if this.canMoveDown()
     a
 
+  emptySquares: ->
+    a = []
+    for r in [0..3]
+      row = @rows[r]
+      for c in [0..3]
+        a.push new Square(c, r) if row[c] == null
+    a
+
+class Square
+  constructor: (@col, @row) ->
+
+
 class BoardStateFactory
   fromGrid: (grid) ->
     bs = new BoardState()
@@ -120,3 +132,4 @@ class BoardStateFactory
 
 this.BoardState = BoardState
 this.BoardStateFactory = BoardStateFactory
+this.Square = Square
