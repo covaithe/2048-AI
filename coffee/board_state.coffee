@@ -92,6 +92,11 @@ class BoardState
         a.push new Square(c, r) if row[c] == null
     a
 
+  populateSquare: (square, value) ->
+    rows = @rows.map (row) -> row.slice(0)
+    rows[square.row][square.col] = value
+    new BoardStateFactory().fromRows rows
+
 class Square
   constructor: (@col, @row) ->
 

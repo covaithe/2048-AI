@@ -152,6 +152,15 @@ BoardState = (function() {
     return a;
   };
 
+  BoardState.prototype.populateSquare = function(square, value) {
+    var rows;
+    rows = this.rows.map(function(row) {
+      return row.slice(0);
+    });
+    rows[square.row][square.col] = value;
+    return new BoardStateFactory().fromRows(rows);
+  };
+
   return BoardState;
 
 })();

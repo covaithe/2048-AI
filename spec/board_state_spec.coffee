@@ -226,5 +226,16 @@ describe 'BoardState', ->
       expect(es).toContain(new stuff.Square(1,3))
       expect(es).toContain(new stuff.Square(3,0))
 
+  describe 'populateSquare', ->
+    it "should return a new board state with the requested value at the square", ->
+      bs = factory.fromRows [
+        [ null, 2,    4,  null]
+        [ 2,    4,    8,  16]
+        [ null, 4   , 16, 16]
+        [ 4,    null, 32, 16]
+      ]
+      new_state = bs.populateSquare(new stuff.Square(0,0), 32)
+      expect(new_state.rows[0]).toEqual [ 32, 2, 4, null ]
+
 
 
