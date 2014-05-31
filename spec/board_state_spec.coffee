@@ -185,5 +185,30 @@ describe 'BoardState', ->
         bs.cols[3] = [ 2, 4, 4, 16 ]
         expect(bs.canMoveDown()).toBe true
 
+    describe 'legalMoves', ->
+      it 'should include left when canMoveLeft', ->
+        spyOn(bs, 'canMoveLeft').andReturn true
+        expect(bs.legalMoves()).toContain('left')
+      it 'should not include left when canMoveLeft is false', ->
+        spyOn(bs, 'canMoveLeft').andReturn false
+        expect(bs.legalMoves()).toNotContain('left')
+      it 'should include right when canMoveRight', ->
+        spyOn(bs, 'canMoveRight').andReturn true
+        expect(bs.legalMoves()).toContain('right')
+      it 'should not include Right when canMoveRight is false', ->
+        spyOn(bs, 'canMoveRight').andReturn false
+        expect(bs.legalMoves()).toNotContain('right')
+      it 'should include up when canMoveUp', ->
+        spyOn(bs, 'canMoveUp').andReturn true
+        expect(bs.legalMoves()).toContain('up')
+      it 'should not include up when canMoveUp is false', ->
+        spyOn(bs, 'canMoveUp').andReturn false
+        expect(bs.legalMoves()).toNotContain('up')
+      it 'should include down when canMoveDown', ->
+        spyOn(bs, 'canMoveDown').andReturn true
+        expect(bs.legalMoves()).toContain('down')
+      it 'should not include down when canMoveDown is false', ->
+        spyOn(bs, 'canMoveDown').andReturn false
+        expect(bs.legalMoves()).toNotContain('down')
   
 

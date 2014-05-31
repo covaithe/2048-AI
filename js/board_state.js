@@ -2,7 +2,7 @@
 var BoardState, BoardStateFactory;
 
 BoardState = (function() {
-  var moveRight;
+  var canGoBackward, canGoForward, moveRight;
 
   function BoardState() {
     var col, row;
@@ -92,72 +92,50 @@ BoardState = (function() {
     return row;
   };
 
+  canGoForward = function(set) {
+    return [0, 1, 2].some(function(i) {
+      return set[i] && (set[i + 1] === null || set[i + 1] === set[i]);
+    });
+  };
+
+  canGoBackward = function(set) {
+    return [3, 2, 1].some(function(i) {
+      return set[i] && (set[i - 1] === null || set[i - 1] === set[i]);
+    });
+  };
+
   BoardState.prototype.canMoveRight = function() {
-    var i, nextVal, row, _i, _j, _len, _ref;
-    _ref = this.rows;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      row = _ref[_i];
-      for (i = _j = 0; _j <= 2; i = ++_j) {
-        if (row[i]) {
-          nextVal = row[i + 1];
-          if (nextVal === null || nextVal === row[i]) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
+    return this.rows.some(canGoForward);
   };
 
   BoardState.prototype.canMoveLeft = function() {
-    var i, nextVal, row, _i, _j, _len, _ref;
-    _ref = this.rows;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      row = _ref[_i];
-      for (i = _j = 3; _j >= 1; i = --_j) {
-        if (row[i]) {
-          nextVal = row[i - 1];
-          if (nextVal === null || nextVal === row[i]) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
+    return this.rows.some(canGoBackward);
   };
 
   BoardState.prototype.canMoveUp = function() {
-    var col, i, nextVal, _i, _j, _len, _ref;
-    _ref = this.cols;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      col = _ref[_i];
-      for (i = _j = 3; _j >= 1; i = --_j) {
-        if (col[i]) {
-          nextVal = col[i - 1];
-          if (nextVal === null || nextVal === col[i]) {
-            return true;
-          }
-        }
-      }
-    }
-    return false;
+    return this.cols.some(canGoBackward);
   };
 
   BoardState.prototype.canMoveDown = function() {
-    var col, i, nextVal, _i, _j, _len, _ref;
-    _ref = this.cols;
-    for (_i = 0, _len = _ref.length; _i < _len; _i++) {
-      col = _ref[_i];
-      for (i = _j = 0; _j <= 2; i = ++_j) {
-        if (col[i]) {
-          nextVal = col[i + 1];
-          if (nextVal === null || nextVal === col[i]) {
-            return true;
-          }
-        }
-      }
+    return this.cols.some(canGoForward);
+  };
+
+  BoardState.prototype.legalMoves = function() {
+    var a;
+    a = [];
+    if (this.canMoveLeft()) {
+      a.push('left');
     }
-    return false;
+    if (this.canMoveRight()) {
+      a.push('right');
+    }
+    if (this.canMoveUp()) {
+      a.push('up');
+    }
+    if (this.canMoveDown()) {
+      a.push('down');
+    }
+    return a;
   };
 
   return BoardState;

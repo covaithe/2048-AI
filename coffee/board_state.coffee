@@ -62,39 +62,27 @@ class BoardState
           break
     row
 
-  canMoveRight: ->
-    for row in @rows
-      for i in [0..2]
-        if row[i]
-          nextVal = row[i+1]
-          return true if nextVal == null or nextVal == row[i]
-    false
+  canGoForward = (set) ->
+    [0..2].some (i) ->
+      set[i] and (set[i+1] == null or set[i+1] == set[i])
 
-  canMoveLeft: ->
-    for row in @rows
-      for i in [3..1]
-        if row[i]
-          nextVal = row[i-1]
-          return true if nextVal == null or nextVal == row[i]
-    false
+  canGoBackward = (set) ->
+    [3..1].some (i) ->
+      set[i] and (set[i-1] == null or set[i-1] == set[i])
+    
 
-  canMoveUp: ->
-    for col in @cols
-      for i in [3..1]
-        if col[i]
-          nextVal = col[i-1]
-          return true if nextVal == null or nextVal == col[i]
-    false
+  canMoveRight: -> @rows.some canGoForward
+  canMoveLeft: -> @rows.some canGoBackward
+  canMoveUp: -> @cols.some canGoBackward
+  canMoveDown: -> @cols.some canGoForward
 
-  canMoveDown: ->
-    for col in @cols
-      for i in [0..2]
-        if col[i]
-          nextVal = col[i+1]
-          return true if nextVal == null or nextVal == col[i]
-    false
-
-
+  legalMoves: ->
+    a = []
+    a.push 'left' if this.canMoveLeft()
+    a.push 'right' if this.canMoveRight()
+    a.push 'up' if this.canMoveUp()
+    a.push 'down' if this.canMoveDown()
+    a
 
 class BoardStateFactory
   fromGrid: (grid) ->
